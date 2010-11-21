@@ -10,16 +10,33 @@ class Blog extends Controller {
 		$this->load->helper('form');
 		$this->load->helper('url');
 		
+		ini_set('error_reporting', 0);
 		// Load html parser library
-		$this->load->library('simple_html_dom');
+		$this->load->library('simple_html_dom');		
 	}
 
 	function index()
 	{
+		$url = 'http://www14.atwiki.jp/bwpokekousatsu/';
+		$html = file_get_html($url);
+
+		// Loading lastest update date
+     	$data['date'] = 
+     	$html->find('body table tbody tr td div[class=plugin_recent] p', 0)->innertext;
+     	
+		// Loading recents
+     	$data['recents'] = 
+     	$html->find('body table tbody tr td div[class=plugin_recent] div ul li');
+     	
 		// Load view
-		$this->load->view('index_view');
+		$this->load->view('index_view', $data);
+
+     	// Release object	
+     	$html->clear(); 
+		unset($html);
 	}
-	function search_url()
+	
+	function _search_url()
 	{
 		$url = $_POST['url'];
 		// Create DOM from URL or file
@@ -51,6 +68,12 @@ class Blog extends Controller {
 	
 	function search_type()
 	{
+		// Checking form info:
+		if(empty($_POST)) {
+			redirect('/');
+			return;
+		}
+		
 		$url = 'http://www14.atwiki.jp/bwpokekousatsu/pages/' . $_POST['hiddenType'] . '.html';
 		$html = file_get_html($url);
 
@@ -66,21 +89,31 @@ class Blog extends Controller {
 		unset($html);
 	}
 	
-	function search_no() {
+	function search_no() {		
+		// Checking form info:
+		if(empty($_POST)) {
+			redirect('/');
+			return;
+		}
+		
 		$url = 'http://www14.atwiki.jp/bwpokekousatsu/pages/' . $_POST['hiddenType'] . '.html';
 		$html = file_get_html($url);
+		$data['url'] = $url;
 
 		// Loading Pokemon name
      	$data['name'] = 
      	$html->find('body table tbody tr td div[id=main] h2', 0)->innertext;
      	
      	// Loading description
-     	$data['description'] = 
-     	$html->find('body table tbody tr td div[id=main] pre', 0)->innertext;
-     	
+     	$data['description'] = $html->find('body table tbody tr td div[id=main] pre', 0)->innertext;
+
      	// Loading status table
      	$data['status'] = 
      	$html->find('body table tbody tr td div[id=main] table');
+     	     	
+     	// Loading skills
+     	$data['skills'] = 
+     	$html->find('body table tbody tr td div[id=main] div[class=plugin_contents] ul li ul li a');
      	
      	// Loading details
      	$data['outline'] = 
@@ -192,24 +225,37 @@ class Blog extends Controller {
 
 	function show_detail()
 	{
+		// Checking form info:
+		if(empty($_POST)) {
+			redirect('/');
+			return;
+		}
+		
 		ini_set('display_errors',0); // Hidding errors
     	error_reporting(0); 		 // Hidding errors
 
 		$data['detail'] = array(); // 型説明を格納する配列
+		$data['table'] = array();
+		
 		$url = 'http://www14.atwiki.jp/bwpokekousatsu/pages/' . $_POST['page'] . '.html';
 		$html = file_get_html($url);
+		$data['url'] = $url;
 
      	// Loading abstract
      	$tactics = $html->find('body table tbody tr td div[id=main] div');
      	
      	// 型についての記述がある段落を抜き出し、その配列番号を取得
      	$num1 = 0;
+     	$int1 = 0;
      	$tmp = array();
+     	$egg = array();
      	foreach($tactics as $tactic) {
      		if(substr(trim($tactic->innertext),0,9) == '特性：') {
      			$tmp[] = $num1;
      		} elseif(substr(trim($tactic->innertext),0,9) == '性格：') {
 	     		$tmp[] = $num1;
+	     	} elseif(substr(trim($tactic->innertext),0,6) == '<tbody') {
+	     		$egg[] = $int1;
 	     	}
      	$num1++;
      	}
@@ -243,6 +289,9 @@ class Blog extends Controller {
 /*      		echo 'tmp='.$tmp[$hidden].'&'.$num3; */
 /*      		echo $tactic->innertext; */
 /*      		echo '<hr />'; */
+     		if($tmp[$hidden] == $num3) {
+     			$data['detail'][] = $tactic->prev_sibling();
+     		}
      		$data['detail'][] = $tactic->innertext;
      		}
      	$num3++;
@@ -251,6 +300,53 @@ class Blog extends Controller {
 /*      	echo var_dump($data['detail']); */
 
 		$this->load->view('detail_view', $data);
+
+     	// Release object	
+     	$html->clear(); 
+		unset($html);
+    }
+    
+    function show_table() {
+		// Checking form info:
+		if(empty($_POST)) {
+			redirect('/');
+			return;
+		}
+		    
+     	$data['table'] = array();		
+		$url = 'http://www14.atwiki.jp/bwpokekousatsu/pages/' . $_POST['page'] . '.html';
+		$html = file_get_html($url);
+		$data['url'] = $url;
+
+     	// Loading abstract
+     	$tables = $html->find('body table tbody tr td div[id=main] table');
+     	
+     	foreach($tables as $table){
+     		if(trim(strip_tags($table->prev_sibling())) == $_POST['hiddenType'] ) {
+     			$data['table'][] = $table->prev_sibling();
+     			$data['table'][] = $table;
+     			if(substr(trim($table->next_sibling()),0,3) != '<h3' && substr(trim($table->next_sibling()),0,3) != '<h2') {
+     				$data['table'][] = $table->next_sibling();
+     			}
+     		}
+     	}
+
+		$this->load->view('table_view', $data);
+
+     	// Release object	
+     	$html->clear(); 
+		unset($html);
+    }
+    
+    function show_recent() {
+		$url = 'http://www14.atwiki.jp/bwpokekousatsu/';
+		$html = file_get_html($url);
+
+		// Loading Pokemon name
+     	$data['date'] = 
+     	$html->find('body table tbody tr td div[id=menu] p', 0)->innertext;
+     	
+		$this->load->view('index_view', $data);
 
      	// Release object	
      	$html->clear(); 

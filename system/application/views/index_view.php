@@ -25,7 +25,7 @@
             color: black;
             background: #fff;
             border: 1px solid #B4B4B4;
-            font: bold 17px Helvetica;
+            font: bold 15px Helvetica;
             padding: 0;    
             margin: 15px 10px 17px 0;
             -webkit-border-radius: 8px;
@@ -34,13 +34,16 @@
             color: #aaa;
             border-top: 1px solid #B4B4B4;
             list-style-type: none;  
-            padding: 10px 10px 10px 10px;
+            padding: 8px 10px 8px 10px;
         }
         li:first-child {    
             border-top: 0;
             -webkit-border-top-left-radius: 8px;
             -webkit-border-top-right-radius: 8px;
-            background: #333;
+            background: #8B8B88 url(img/firstchildbg.png) repeat-x 0px 1px;
+            color: white;
+            padding: 3px 10px 2px;
+            text-shadow: #666 0px 1px 0px;
         }
         li:first-child a {
             color: #FFF;
@@ -59,7 +62,8 @@
             padding: 12px 10px 12px 10px;
             margin: -10px;
     		background: url(img/iPhoneArrow.png) no-repeat right center;
-            -webkit-tap-highlight-color:rgba(91, 166, 255, 0.5000)
+            -webkit-tap-highlight-color:rgba(91, 166, 255, 0.5000);
+            font-size: 16px;            
         }
         #normal {
             margin: 0;
@@ -69,7 +73,6 @@
         #normal h2 {
             color: #555;
             background: #fff;
-            border: 1px solid #B4B4B4;
             font: bold 25px Helvetica;
             padding: 0;
             padding-left: 10px;
@@ -149,7 +152,19 @@
 			padding: 0;
             border-top: 1px solid #B4B4B4;
 		}
+		form {
+			margin-bottom: 0;
+		}
     </style>
+    <!-- Set a hidden value and submit setHiddenValueForm -->
+	<script language="javascript">
+		function searchByURL(type) {
+			if(type) {
+				document.searchByURLForm.hiddenType.value = type;
+			}
+		document.searchByURLForm.submit();
+		}
+	</script>    
     <!-- Set a hidden value and submit setHiddenValueForm -->
 	<script language="javascript">
 		function setHiddenValue(type) {
@@ -163,11 +178,12 @@
 	</script>    
 </head>
 <body id="normal">
-	<!-- Display Pokemon name -->
 	<h2>ポケモン第五世代・対戦考察まとめwiki</h2>
-	
+
 	<!-- Display the description -->
-	<p>タイプ別で探す</p>
+	<ul>
+		<li style="font-size: 13px;">タイプ別で探す</li>	
+	</ul>
 	
 	<!-- List options -->
 	<?=form_open('blog/search_type', array('name' => 'setHiddenValueForm'));?>
@@ -192,8 +208,42 @@
 	        <input type="hidden" name="hiddenType" />
 		</div>
 	</form>
-	<h2 style="clear:both;">アップデート情報</h2>
-	<p>サンプルテキスト...</p>
+	
+	<?=form_open('blog/search_no', array('name' => 'searchByURLForm', 'style' => 'clear:both;'));?>
+	<ul>
+		<li style="font-size: 13px;">最近更新されたページ : <?=$date?></li>
+		<?php foreach($recents as $recent): ?>
+			<?php if(substr(trim(strip_tags($recent->innertext)),0,3) == '格'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),0,3) == '要'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),-12,12) == 'グループ'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),-3,3) == '覧'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),0,9) == 'データ'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),-12,12) == 'パーティ'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),-3,3) == '察'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),0,3) == '終'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),-12,12) == 'ポケモン'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),0,6) == '編集'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php elseif(substr(trim(strip_tags($recent->innertext)),-3,3) == '表'): ?>
+				<li style="font-size: 16px;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;"><?=strip_tags($recent->innertext)?></li>
+			<?php else: ?>
+				<?php
+					echo str_replace('http://www14.atwiki.jp/bwpokekousatsu/pages/','javascript:void(0)" onclick="searchByURL(',str_replace('.html', ')',str_replace('<div>','',str_replace('</div>','',$recent))));
+				?>
+			<?php endif; ?>
+		<?php endforeach; ?>
+	</ul>
+	<input type="hidden" name="hiddenType" />
+	</form>
 
 	<div id="footer">
 		<p>表示：Mobile | <a href="http://www14.atwiki.jp/bwpokekousatsu/" target="_blank">PC</a> | その他リンク等</p>

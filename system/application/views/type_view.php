@@ -24,22 +24,26 @@
             color: black;
             background: #fff;
             border: 1px solid #B4B4B4;
-            font: bold 17px Helvetica;
+            font: bold 15px Helvetica;
             padding: 0;    
             margin: 15px 10px 17px 0;
             -webkit-border-radius: 8px;
         }
         ul li {
-            color: #666;
+            color: #aaa;
             border-top: 1px solid #B4B4B4;
             list-style-type: none;  
-            padding: 10px 10px 10px 10px;
+            padding: 8px 10px 8px 10px;
+            font-size: 13px;
         }
-       li:first-child {    
+        li:first-child {    
             border-top: 0;
             -webkit-border-top-left-radius: 8px;
             -webkit-border-top-right-radius: 8px;
-            background: #333;
+            background: #8B8B88 url(../../img/firstchildbg.png) repeat-x 0px 1px;
+            color: white;
+            padding: 3px 10px 2px;
+            text-shadow: #666 0px 1px 0px;
         }
         li:first-child a {
             color: #FFF;
@@ -59,6 +63,7 @@
             margin: -10px;
     		background: url(../../img/iPhoneArrow.png) no-repeat right center;
             -webkit-tap-highlight-color:rgba(91, 166, 255, 0.5000);
+            font-size: 16px;            
         }
         #normal {
             margin: 0;
@@ -119,6 +124,9 @@
 		    text-decoration: none;
 		    background: none;
 		}
+		form {
+			margin-bottom: 0;
+		}
     </style>
     <!-- Set a hidden value and submit searchByTypeForm -->
 	<script language="javascript">
@@ -140,7 +148,8 @@
 	<?php if($types): ?>
 		<?php $m = 0; ?>
 		<?php foreach($types as $type): ?><ul>
-		<li style="font-size:13px;padding:5px;text-align:left;color:#ccc;"><?=$type->innertext?></li>
+		<?php if(substr(trim(strip_tags($type)),0,3) != 'タ'): ?>
+		<li style="font-size:13px;text-align:left;color:#fff;"><?=$type->innertext?></li>
 			<?php
 			$tmp = explode(' /', $choices[$m]);
 			foreach($tmp as $choice) {
@@ -148,6 +157,7 @@
 			}
 			?>
 		<?php $m++ ?>
+		<?php endif; ?>
 		</ul><?php endforeach; ?>
 	<?php endif; ?>
 	<input type="hidden" name="hiddenType" />

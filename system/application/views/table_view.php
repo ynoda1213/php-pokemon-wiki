@@ -146,11 +146,25 @@
 		    text-decoration: none;
 		    background: none;
 		}
+		table {
+			font-size: 0.95em;		
+			background-color: white;
+			width: 100%;
+			margin: 0;
+			border-top: 1px solid #B4B4B4;
+			border-bottom: 1px solid #B4B4B4;
+            -webkit-border-radius: 8px;
+		}
 		h3, h4 {
 			color: rgb(76,86,108);
 			font: bold 18px Helvetica;
 			text-shadow: #fff 0 1px 0;
-			margin: 15px 0 15px 15px;
+			margin: 15px 0 15px 10px;  
+		}
+		dl {
+			font-size: 13px;
+			margin: 15px;
+			text-shadow: #fff 0 1px 0;
 		}
     </style>
     <!-- Set a hidden value and submit searchByTypeForm -->
@@ -167,15 +181,9 @@
 	<h1><a style="text-decoration:none;color:white;" href="<?=base_url()?>index.php">BWポケモン考察(α)</a></h1>
     <a id="homeButton" class="button" href="javascript:history.back();">戻る</a> 
 
-    <?php if($detail): ?>
-    	<?php $num3 = 0; ?>
-		<?php foreach($detail as $row): ?>
-			<?php if($num3 == 0): ?>
-				<?=$row?>
-			<?php else: ?>
-				<div id="detail"><?=$row?></div>
-			<?php endif; ?>
-			<?php $num3++; ?>
+    <?php if($table): ?>
+		<?php foreach($table as $row): ?>
+			<?=$row?>
 		<?php endforeach; ?>
 	<?php else: ?>
 		<div id="detail">エラーのため表示できませんでした。改善に向け作業中です... :-(</div>

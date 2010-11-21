@@ -38,13 +38,17 @@
             color: #aaa;
             border-top: 1px solid #B4B4B4;
             list-style-type: none;  
-            padding: 10px 10px 10px 10px;
+            padding: 8px 10px 8px 10px;
+            font-size: 13px;
         }
         li:first-child {    
             border-top: 0;
             -webkit-border-top-left-radius: 8px;
             -webkit-border-top-right-radius: 8px;
-            background: #333;
+            background: #8B8B88 url(../../img/firstchildbg.png) repeat-x 0px 1px;
+            color: white;
+            padding: 3px 10px 2px;
+            text-shadow: #666 0px 1px 0px;
         }
         li:first-child a {
             color: #FFF;
@@ -63,7 +67,8 @@
             padding: 12px 10px 12px 10px;
             margin: -10px;
     		background: url(../../img/iPhoneArrow.png) no-repeat right center;
-            -webkit-tap-highlight-color:rgba(91, 166, 255, 0.5000)
+            -webkit-tap-highlight-color:rgba(91, 166, 255, 0.5000);
+            font-size: 16px;            
         }
         #normal {
             margin: 0;
@@ -146,6 +151,9 @@
 		    text-decoration: none;
 		    background: none;
 		}
+		form {
+			margin-bottom: 0;
+		}
     </style>
     <!-- Set a hidden value and submit setHiddenValueForm -->
 	<script language="javascript">
@@ -156,6 +164,26 @@
 				document.setHiddenValueForm.hiddenType.value = 0;			
 			}
 		document.setHiddenValueForm.submit();
+		}
+		function setHiddenValue2(type) {
+			if(type) {
+				document.setHiddenValueForm2.hiddenType.value = type;
+			} else {
+				document.setHiddenValueForm2.hiddenType.value = 0;			
+			}
+		document.setHiddenValueForm2.submit();
+		}
+		function searchByURL(type) {
+			if(type) {
+				document.searchByURLForm3.hiddenType.value = type;
+			}
+		document.searchByURLForm3.submit();
+		}
+		function searchByURL2(type) {
+			if(type) {
+				document.searchByURLForm4.hiddenType.value = type;
+			}
+		document.searchByURLForm4.submit();
 		}
 	</script>    
 </head>
@@ -172,7 +200,11 @@
 	<?php endif; ?></p>
 
 	<!-- Display table -->
-	<?php if($status[0]) echo $status[0]; ?>
+	<?=form_open('blog/search_no', array('name' => 'searchByURLForm4'));?>
+		<?php if($status[0]) echo str_replace('http://www14.atwiki.jp/bwpokekousatsu/pages/','javascript:void(0)" onclick="searchByURL2(',str_replace('.html', ')',str_replace('<div>','',str_replace('</div>','',$status[0])))); ?>
+    	<input type="hidden" name="hiddenType" />
+    	<input type="hidden" name="page" value="<?=$page?>" />
+	</form>
 	
 	<!-- List options -->
 	<?php if($outline): ?>
@@ -181,15 +213,26 @@
 			<?php $num = 0; // hiddenタイプの引数設定 ?>
 			<?=form_open('blog/show_detail', array('name' => 'setHiddenValueForm'));?>
 				<ul>
-					<li>概要</li>
+					<li style="font-size:13px;">概要</li>
 					<?php foreach($tactics as $tactic): // 変数$staticsの展開 ?>
-						<?php if(substr(trim($tactic->innertext),-3,3) == "型"): ?>
+						<?php if(substr(trim($tactic->innertext),-3,3) == "型" || substr(trim($tactic->innertext),-3,3) == "）" || substr(trim($tactic->innertext),-1,1) == ")"): ?>
 							<li style="background:#fff;"><a style="color:#000;" href="javascript:void(0)" onclick="setHiddenValue(<?=$num?>);">
 							<?php echo trim($tactic->innertext); ?></a></li>
 						<?php endif; ?>
 						<?php $num++ // インクリメント ?>
 					<?php endforeach; ?>
-					<li>タマゴ技</li>
+				</ul>
+		        <input type="hidden" name="hiddenType" />
+		        <input type="hidden" name="page" value="<?=$page?>" />
+			</form>
+			<?=form_open('blog/show_table', array('name' => 'setHiddenValueForm2'));?>
+				<ul>
+					<li style="font-size:13px;">覚える技</li>
+					<?php foreach($skills as $skill): ?>
+						<?php if(substr(trim($skill->innertext),-3,3) != "型" && substr(trim($skill->innertext),-3,3) != "）" && substr(trim($skill->innertext),-1,1) != ")"): ?>
+							<li><a style="color:#000;" href="javascript:void(0)" onclick="setHiddenValue2('<?=$skill->innertext?>');"><?=$skill->innertext?></a></li>
+						<?php endif; ?>
+					<?php endforeach; ?>
 				</ul>
 		        <input type="hidden" name="hiddenType" />
 		        <input type="hidden" name="page" value="<?=$page?>" />
@@ -198,20 +241,25 @@
 	
 	<?php else: ?>
 		<p style="color:red;">※見出しを正常に取得できませんでした。本家サイトに存在しない可能性があります。</p>
+		<p><a href="<?=$url?>">本家でこのページを見るにはこちら</a></p>
 		<?php return; // 一時的に強制終了 ?>
 	<?php endif; ?>
 
 	<!-- Display abstract -->
 	<?php if(isset($abstract)): ?>
+		<?=form_open('blog/search_no', array('name' => 'searchByURLForm3'));?>
 		<?php foreach($abstract as $paragraph): ?>
 
 			<!-- $paragraph内部に"<!--"の並びの文字列を見つけるとループ終了 -->
 			<?php if(substr(trim($paragraph->innertext),0,4) != "<!--"): ?>
-				<p><?=$paragraph->innertext?></p>
+				<p><?=str_replace('http://www14.atwiki.jp/bwpokekousatsu/pages/','javascript:void(0)" onclick="searchByURL(',str_replace('.html', ')',str_replace('<div>','',str_replace('</div>','',$paragraph->innertext))))?></p>
 			<?php else: ?>
 				<?php break; ?>
 			<?php endif; ?>
 		<?php endforeach; ?>
+        <input type="hidden" name="hiddenType" />
+        <input type="hidden" name="page" value="<?=$page?>" />
+		</form>
 	<?php endif; ?>
 
     <script type="text/javascript">
