@@ -1,0 +1,150 @@
+h1 a {
+text-decoration: none;
+color: white;
+}
+
+h2 {
+color: #555;
+background: #fff;
+font: bold 25px Helvetica;
+padding: 0;
+padding-left: 10px;
+margin: 15px 10px 17px 10px;
+border: 1px solid #B4B4B4;
+-webkit-border-radius: 8px;
+}
+
+div#menu ul {
+margin: 4px 4px 4px 0px;
+}
+
+div#menu ul li {
+/* background: #F4FBFE url(../../system/img/image-loading.gif) no-repeat 50% 50%; */
+background-color: #F4FBFE;
+float: left;
+height: 55px;
+width: 73px;
+border: 1px solid #C0D5DD;
+margin: 0px 0px 4px 4px;
+}
+
+div#menu ul li a {
+color: #aaa;
+display: block;
+height: 100%;
+width: 100%;
+text-decoration: none;
+line-height: 57px;
+text-align: center;
+font-weight: bold;
+}
+
+div#menu ul li a img {
+height: 75px;
+width: 75px;
+}
+
+div#menu2 {
+clear: both;
+}
+
+div#menu2 ul {
+margin: 4px 4px 4px 0px;
+}
+
+div#menu2 ul li {
+background-color: #F4FBFE;
+float: left;
+height: 57px;
+width: 57px;
+border: 1px solid #C0D5DD;
+margin: 0px 0px 4px 4px;
+}
+
+div#menu2 ul li a {
+color: #aaa;
+display: block;
+height: 100%;
+width: 100%;
+text-decoration: none;
+line-height: 59px;
+text-align: center;
+font-weight: bold;
+}
+
+h3.textLabels {
+border-top: 0;
+background: #8B8B88 url(../../system/img/firstchildbg.png) repeat-x 0px 1px;
+color: white;
+padding: 3px 10px 2px;
+text-shadow: #666 0px 1px 0px;
+line-height: 20px;
+}
+
+.sections ul {
+border-bottom: 1px solid #B4B4B4;
+}
+
+.sections ul li {
+color: #aaa;
+border-top: 1px solid #B4B4B4;
+font: bold 15px Helvetica;
+padding: 10px 0px 10px 10px;
+}
+
+.sections ul li a {
+color: #000;
+text-decoration: none;
+text-overflow: ellipsis;
+white-space: nowrap;
+overflow: hidden;
+background: url(../../system/img/iPhoneArrow.png) no-repeat right center;
+margin: -10px 0 -10px -10px;
+padding: 10px 0px 10px 10px;
+display: block;
+-webkit-tap-highlight-color:rgba(155, 155, 155, 0.5000);
+}
+
+div#update {
+clear: both;
+}
+
+#main {
+min-height: 275px;
+}
+
+#main div#info, #main div#abstract {
+margin: 10px 10px;
+}
+
+#main div#detail {
+margin: 10px;
+}
+
+#main div#detail p {
+margin-bottom: 10px;
+}
+
+img.break {
+margin-bottom: 10px;
+}
+
+#main div#abstract p {
+margin-bottom: 10px;
+}
+
+#footer {
+min-height: 100px;
+text-align: center;
+background: #C8C8C8 url(../../system/img/pinstripes.png);
+}
+
+#footer img {
+margin-top: 10px;
+-webkit-border-radius: 8px;
+border: 1px solid #B4B4B4;
+}
+
+#footer p {
+margin-top: 10px;
+}
